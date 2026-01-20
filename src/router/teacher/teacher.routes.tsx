@@ -1,4 +1,4 @@
-import { TDashboard } from "@/pages/teacher/home/dashboard";
+import { TDashboard } from "@/pages/teacher/home/schedule";
 import { TLessons } from "@/pages/teacher/lessons/lessons";
 import { TProfile } from "@/pages/teacher/profile/profile";
 import { TStudents } from "@/pages/teacher/students/students";

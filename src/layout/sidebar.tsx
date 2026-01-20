@@ -17,7 +17,7 @@ import { TeacherNavigation } from "@/router/teacher/teacher.navigation";
 
 export const navigationMap: Partial<Record<TUserRole, any[]>> = {
   SUPERADMIN: superAdminNavigation,
-	ADMIN: AdminNavigation,
+  ADMIN: AdminNavigation,
   TEACHER: TeacherNavigation,
 };
 

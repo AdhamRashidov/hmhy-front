@@ -32,10 +32,12 @@ import { ALessons } from "./pages/admin/lessons/lessons";
 import { APayments } from "./pages/admin/payments/payments";
 import { AEarnings } from "./pages/admin/earnings/earnings";
 import { AProfile } from "./pages/admin/profile/profile";
-import { TDashboard } from "./pages/teacher/home/dashboard";
+import { TDashboard } from "./pages/teacher/home/schedule";
 import { TStudents } from "./pages/teacher/students/students";
 import { TLessons } from "./pages/teacher/lessons/lessons";
 import { AuthCallback } from "./pages/INTRO/auth/authCallback";
+import { TProfile } from "./pages/teacher/profile/profile";
+import { TeacherLessonsPage } from "./pages/super-admin/lessons/lesson-detail";
 
 function AppRedirect() {
   const role = localStorage.getItem("userRole");
@@ -125,6 +127,10 @@ function App() {
               <Route path="admins" element={<Admins />} />
               <Route path="teachers" element={<Teachers />} />
               <Route path="students" element={<Students />} />
+              <Route
+                path="teacher/:id/lessons"
+                element={<TeacherLessonsPage />}
+              />
               <Route path="lessons" element={<Lessons />} />
               <Route path="payments" element={<Payments />} />
               <Route path="earnings" element={<Earnings />} />
@@ -153,7 +159,7 @@ function App() {
               <Route path="dashboard" element={<TDashboard />} />
               <Route path="students" element={<TStudents />} />
               <Route path="lessons" element={<TLessons />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="profile" element={<TProfile />} />
             </Route>
           </Route>
         </Route>

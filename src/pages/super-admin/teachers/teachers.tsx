@@ -3,7 +3,7 @@ import {
   useTeacherList,
   useChangeTeacherStatus,
 } from "@/features/super-admin/teachers/useTeacherActions";
-import { Mail, Phone, Star, Award, ArrowUpDown, ArrowDown } from "lucide-react";
+import { Mail, Phone, Star, Award, ArrowUpDown } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
   Avatar,
@@ -34,15 +34,13 @@ export const Teachers = () => {
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
 
-  /**
-   * FOCUS: URL-dan holatni o'qish.
-   * Agar Header orqali ?view=deleted bo'lsa, Arxiv sahifasi ochiladi.
-   */
+  const [viewMode, setViewMode] = useState<"active" | "pending">("active");
+
   const isArchived = searchParams.get("view") === "deleted";
   const searchQuery = searchParams.get("search") || "";
 
   // React Query: Faqat "tiriklar" ro'yxati uchun
-  const { data, isPending } = useTeacherList(searchQuery);
+  const { data, isPending } = useTeacherList({ search: searchQuery });
 
   // Modal states
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(
@@ -98,8 +96,13 @@ export const Teachers = () => {
 
   const teachers: Teacher[] = data?.data || [];
 
+  const pendingTeachers = teachers.filter((t) => !t.isActive);
+  const activeTeachers = teachers.filter((t) => t.isActive);
+
+  const currentList = viewMode === "active" ? activeTeachers : pendingTeachers;
+
   // Frontend filter (Backend qidiruvi bilan parallel ishlaydi)
-  const filteredTeachers = teachers.filter((t) =>
+  const filteredTeachers = currentList.filter((t) =>
     (t.fullName || t.name || "")
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
@@ -107,15 +110,9 @@ export const Teachers = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* FOCUS: Header bu yerda yo'q, u MainLayout ichida turibdi. 
-         Header URL-dagi 'view' va 'search' parametrlarini boshqaradi.
-      */}
-
       {isArchived ? (
-        // Qabriston (Arxiv) sahifasi
         <DeletedTeachersPage />
       ) : isPending ? (
-        // Yuklanish holati (Skeleton)
         <div className="space-y-4">
           <div className="flex items-center justify-between px-2">
             <Skeleton className="h-9 w-32" />
@@ -129,155 +126,199 @@ export const Teachers = () => {
         </div>
       ) : (
         <>
-          {/* Filtrlar va Sortlash qismi */}
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <span>Status:</span>
-              <Select defaultValue="all">
-                <SelectTrigger className="w-20 h-8 bg-gray-50/50">
-                  <SelectValue placeholder="All" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                </SelectContent>
-              </Select>
+          {/* 1. Yuqori Navigatsiya va Filtrlar */}
+          <div className="flex flex-col gap-6 border-b pb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant={viewMode === "active" ? "default" : "outline"}
+                  onClick={() => setViewMode("active")}
+                  className="rounded-full px-6 transition-all"
+                >
+                  Tasdiqlanganlar
+                </Button>
+                <Button
+                  variant={viewMode === "pending" ? "default" : "outline"}
+                  onClick={() => setViewMode("pending")}
+                  className="relative rounded-full px-6 border-orange-200 text-orange-700 hover:bg-orange-50 transition-all"
+                >
+                  Arizalar
+                  {pendingTeachers.length > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] text-white animate-bounce shadow-lg font-bold">
+                      {pendingTeachers.length}
+                    </span>
+                  )}
+                </Button>
+              </div>
+
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <span>Status:</span>
+                  <Select defaultValue="all">
+                    <SelectTrigger className="w-24 h-9 bg-gray-50/50">
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Sortlash sarlavhalari */}
+            <div className="flex items-center gap-8 text-[13px] font-medium text-gray-700 px-4">
+              <span className="text-gray-400 w-[35%] min-w-[320px]">
+                O'qituvchi ma'lumotlari
+              </span>
+              <div className="flex items-center gap-8 flex-1">
+                <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600 min-w-37.5">
+                  Email/Tel <ArrowUpDown className="w-3.5 h-3.5" />
+                </div>
+                <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600 min-w-20">
+                  Reyting <ArrowUpDown className="w-3.5 h-3.5" />
+                </div>
+                <div className="flex-1"></div> {/* Bo'sh joy */}
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-8 text-[13px] font-medium text-gray-700 px-2 py-2 pt-4">
-            <span className="text-gray-400">Sort by:</span>
-            <div className="flex items-center gap-2 cursor-default min-w-20">
-              Name <ArrowDown className="w-3.5 h-3.5" />
-            </div>
-            <div className="flex items-center gap-2 cursor-default min-w-20">
-              Email <ArrowUpDown className="w-3.5 h-3.5" />
-            </div>
-            <div className="flex items-center gap-2 cursor-default min-w-20">
-              Rating <ArrowUpDown className="w-3.5 h-3.5" />
-            </div>
-            <div className="flex items-center gap-2 cursor-default min-w-20">
-              Price <ArrowUpDown className="w-3.5 h-3.5" />
-            </div>
-            <div className="flex items-center gap-2 cursor-default min-w-20">
-              Lessons <ArrowUpDown className="w-3.5 h-3.5" />
-            </div>
-            <div className="flex items-center gap-2 cursor-default min-w-20">
-              Created Date <ArrowUpDown className="w-3.5 h-3.5" />
-            </div>
-          </div>
-
-          {/* Asosiy Teacherlar Ro'yxati */}
+          {/* 3. Asosiy Teacherlar Ro'yxati */}
           <div className="space-y-4">
             {filteredTeachers.length === 0 ? (
-              <Card className="p-12 text-center text-gray-500">
-                No teachers found
+              <Card className="p-16 text-center text-gray-500 border-dashed bg-gray-50/50">
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-lg font-medium">
+                    Hech qanday ma'lumot topilmadi
+                  </p>
+                  <p className="text-sm opacity-70">
+                    Siz qidirayotgan o'qituvchi hali mavjud emas yoki
+                    tasdiqlanmagan.
+                  </p>
+                </div>
               </Card>
             ) : (
               filteredTeachers.map((teacher) => (
                 <Card
                   key={teacher.id}
-                  className="pl-4 pr-12 py-4 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow"
+                  className={`pl-4 pr-6 py-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
+                    !teacher.isActive
+                      ? "border-l-4 border-l-orange-500 bg-orange-50/10"
+                      : "border-gray-100 bg-white"
+                  }`}
                 >
                   <div className="flex items-center gap-4">
+                    {/* Profil qismi */}
                     <div className="flex items-center gap-4 w-[35%] min-w-[320px] shrink-0">
-                      <Avatar className="h-14 w-14 rounded-full border border-gray-100">
+                      <Avatar className="h-14 w-14 rounded-full border-2 border-white shadow-sm">
                         <AvatarImage
                           src={teacher.imageUrl}
                           className="object-cover"
                         />
-                        <AvatarFallback className="bg-gray-50 text-gray-500 font-bold">
+                        <AvatarFallback className="bg-blue-50 text-blue-600 font-bold text-lg">
                           {getInitials(teacher.fullName || teacher.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col gap-1 overflow-hidden">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-gray-900 text-lg truncate">
+                          <h3 className="font-bold text-gray-900 text-base truncate">
                             {teacher.fullName || teacher.name}
                           </h3>
                           <Badge
-                            className={`text-[10px] px-2 py-0.5 rounded-full border-none font-bold uppercase ${
+                            className={`text-[9px] px-2 py-0 rounded-full border-none font-bold uppercase shadow-none ${
                               teacher.isActive
-                                ? "bg-green-100 text-green-700 hover:bg-green-100"
-                                : "bg-gray-100 text-red-500 hover:bg-gray-100"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-orange-100 text-orange-700"
                             }`}
                           >
-                            {teacher.isActive ? "Active" : "Inactive"}
+                            {teacher.isActive ? "Active" : "Pending"}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
-                          <span className="text-blue-600 font-medium">
-                            🌐 {teacher.specification || "❌"}
+                        <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
+                          <span className="text-blue-600">
+                            {teacher.specification || "Yo'nalish yo'q"}
                           </span>
-                          <span className="flex items-center gap-1 font-medium">
-                            <Award className="w-4 h-4 text-orange-500" />{" "}
-                            {teacher.level || 0}
+                          <span className="flex items-center gap-1">
+                            <Award className="w-3.5 h-3.5 text-orange-500" />
+                            {teacher.level || 0} level
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-center gap-1.5 w-[30%] px-6 border-l border-gray-100 shrink-0">
+                    {/* Kontakt qismi */}
+                    <div className="flex flex-col justify-center gap-1.5 w-50 px-6 border-l border-gray-100 shrink-0">
                       <div
-                        className="flex items-center gap-3 text-sm text-gray-600 font-medium truncate cursor-pointer hover:text-blue-600"
+                        className="flex items-center gap-2 text-[13px] text-gray-600 hover:text-blue-600 cursor-pointer"
                         onClick={() => {
                           navigator.clipboard.writeText(teacher.email);
-                          toast.success("Email copied!");
+                          toast.success("Email nusxalandi!");
                         }}
                       >
-                        <Mail className="w-4 h-4 text-gray-400 shrink-0" />{" "}
+                        <Mail className="w-3.5 h-3.5 text-gray-400" />
                         <span className="truncate">{teacher.email}</span>
                       </div>
                       <div
-                        className="flex items-center gap-3 text-sm text-gray-600 font-medium cursor-pointer hover:text-blue-600"
+                        className="flex items-center gap-2 text-[13px] text-gray-600 hover:text-blue-600 cursor-pointer"
                         onClick={() => {
                           navigator.clipboard.writeText(teacher.phoneNumber);
-                          toast.success("Phone number copied!");
+                          toast.success("Tel nusxalandi!");
                         }}
                       >
-                        <Phone className="w-4 h-4 text-gray-400 shrink-0" />{" "}
+                        <Phone className="w-3.5 h-3.5 text-gray-400" />
                         <span>{teacher.phoneNumber}</span>
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center w-[10%] shrink-0">
-                      <div className="flex items-center gap-1 text-yellow-500 font-bold">
-                        <Star className="w-5 h-5 fill-yellow-500" />{" "}
-                        {Number(teacher.rating).toFixed(1)}
+                    {/* Reyting qismi */}
+                    <div className="flex flex-col items-center justify-center w-20 shrink-0 border-l border-gray-100">
+                      <div className="flex items-center gap-1 text-yellow-500 font-bold text-base">
+                        <Star className="w-4 h-4 fill-yellow-500" />
+                        {Number(teacher.rating || 0).toFixed(1)}
                       </div>
                       <span className="text-[10px] text-gray-400 font-medium uppercase">
                         Rating
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-end gap-2 flex-1 border-l border-gray-100">
+                    {/* Action tugmalari */}
+                    <div className="flex items-center justify-end gap-5 flex-1 border-l border-gray-100 pl-4">
                       <Button
                         variant="outline"
-                        className="h-9 px-4 text-xs font-semibold"
+                        size="sm"
+                        className="h-8 text-[11px] font-bold"
                         onClick={() => handleOpenDetails(teacher.id)}
                       >
                         More
                       </Button>
                       <Button
                         variant={teacher.isActive ? "outline" : "default"}
-                        className={`h-9 px-4 text-xs font-semibold ${
-                          !teacher.isActive && "bg-black text-white"
+                        size="sm"
+                        className={`h-8 text-[11px] font-bold ${
+                          !teacher.isActive &&
+                          "bg-blue-600 hover:bg-blue-700 text-white"
                         }`}
                         onClick={() => handleStatusToggle(teacher.id)}
                         disabled={isStatusPending}
                       >
                         {teacher.isActive ? "Deactivate" : "Activate"}
                       </Button>
-                      <Button
+                      {/* <Button
                         variant="outline"
-                        className="h-9 px-4 text-xs font-semibold"
+                        size="sm"
+                        className="b h-8 text-[11px] font-bold"
                         onClick={() => handleEditClick(teacher)}
                       >
                         Edit
-                      </Button>
+                      </Button> */}
                       <Button
                         variant="destructive"
-                        className="h-9 px-4 text-xs font-semibold bg-red-600 hover:bg-red-700"
-                        onClick={() => handleDeleteClick(teacher)}
+                        size="sm"
+                        className="h-8 text-[11px] font-bold bg-red-600 hover:bg-red-700"
+                        onClick={() => {
+                          setDeleteTeacher(teacher);
+                          setIsDeleteModalOpen(true);
+                        }}
                       >
                         Delete
                       </Button>
@@ -290,10 +331,10 @@ export const Teachers = () => {
         </>
       )}
 
-      {/* Umumiy Modallar */}
+      {/* Modallar */}
       {selectedTeacherId && (
         <TeacherDetailsModal
-          id={selectedTeacherId}
+          id={selectedTeacherId as string}
           open={isModalOpen}
           onOpenChange={setIsModalOpen}
         />

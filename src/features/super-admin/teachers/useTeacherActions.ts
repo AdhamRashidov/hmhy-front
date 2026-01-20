@@ -2,6 +2,8 @@ import API from "@/config/request";
 import type { AxiosErrorResponse } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { TeacherFilters } from "./types";
+import type { LessonFilters, LessonsResponse } from "../lessons/types/types";
 
 const TEACHER_KEYS = {
 	list: ["teacherList"],
@@ -74,13 +76,11 @@ export const useDeleteTeacher = () => {
 };
 
 // 5. GET all teachers 
-export const useTeacherList = (search?: string) => {
+export const useTeacherList = (filters?: TeacherFilters) => {
 	return useQuery({
-		queryKey: ["teacherList", search],
+		queryKey: ["teacherList", filters],
 		queryFn: () => API.get("/teacher", {
-			params: {
-				search: search || undefined
-			}
+			params: filters
 		}).then((res) => res.data),
 	});
 };
@@ -113,3 +113,19 @@ export const useChangeTeacherStatus = () => {
 		},
 	})
 }
+
+export const useTeacherLessons = (
+	teacherId: string,
+	filters?: LessonFilters,
+	enabled: boolean = true
+) => {
+	return useQuery({
+		queryKey: ['teacher-lessons', teacherId, filters],
+		queryFn: () =>
+			API
+				.get<LessonsResponse>(`/lessons/${teacherId}/lessons`, { params: filters })
+				.then((res) => res.data),
+		enabled: enabled && !!teacherId,
+		placeholderData: (prev) => prev,
+	});
+};
