@@ -62,7 +62,7 @@ const TeacherCard = ({ teacher }: TeacherCardProps) => {
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-slate-200 hover:border-[#20B2AA]/30">
       <div className="flex items-start gap-4 mb-4">
         <div className="relative">
-          {teacher.imageUrl ? (
+          {/* {teacher.imageUrl ? (
             <img
               src={teacher.imageUrl}
               alt={teacher.fullName}
@@ -76,7 +76,14 @@ const TeacherCard = ({ teacher }: TeacherCardProps) => {
             >
               {getInitials(teacher.fullName)}
             </div>
-          )}
+          )} */}
+          <div
+            className={`w-16 h-16 rounded-xl ${getAvatarColor(
+              teacher.fullName,
+            )} flex items-center justify-center text-white text-lg font-bold shadow-md`}
+          >
+            {getInitials(teacher.fullName)}
+          </div>
           {teacher.isActive && (
             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white shadow-sm"></div>
           )}

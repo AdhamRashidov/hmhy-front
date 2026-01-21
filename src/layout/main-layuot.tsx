@@ -6,6 +6,7 @@ import { User2 } from "lucide-react";
 import type { TUserRole } from "@/types/types";
 import { getPageLabel } from "@/utils/get-page-label";
 import { Header } from "@/components/common/header";
+import { useProfile } from "@/features/teachers/teacher-base.service";
 
 export const MainLayuot = () => {
   const location = useLocation();
@@ -14,6 +15,8 @@ export const MainLayuot = () => {
 
   const navigation = navigationMap[role] || [];
   const currentLabel = getPageLabel(navigation, location.pathname);
+
+  const { data } = useProfile();
 
   return (
     <>
@@ -28,8 +31,8 @@ export const MainLayuot = () => {
                   {role === "TEACHER"
                     ? "Teacher Panel"
                     : role === "STUDENT"
-                    ? "Student Panel"
-                    : "Admin Panel"}
+                      ? "Student Panel"
+                      : "Admin Panel"}
                 </h1>
               </div>
 
@@ -39,7 +42,17 @@ export const MainLayuot = () => {
                     <span>
                       <User2 size={17} color="#fff000" />
                     </span>
-                    <h1 className="text-white/80 font-semibold">{username}</h1>
+
+                    {role === "TEACHER" ? (
+                      <h1 className="text-white/80 font-semibold">
+                        {data?.data?.fullName || "Teacher profile sozlanmagan..."}
+                      </h1>
+                    ) : (
+                      <h1 className="text-white/80 font-semibold">
+                        {username}
+                      </h1>
+                    )}
+
                     <h2 className="py-1 px-3 bg-[#20B2AA] rounded-sm text-sm">
                       {role}
                     </h2>
