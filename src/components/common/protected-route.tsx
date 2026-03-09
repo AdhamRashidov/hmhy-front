@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth.tsx";
 import type { TUserRole } from "@/types/types";
+import Cookies from "js-cookie";
 
 interface ProtectedRouteProps {
   children?: React.ReactNode;
@@ -13,31 +14,29 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles = [],
 }) => {
   const { isAuthenticated, userRole, isLoading } = useAuth();
+  const hasToken = Cookies.get("token");
 
-  if (isLoading) {
-    return <div>Yuklanmoqda...</div>;
+  const isRoleAllowed = useMemo(() => {
+    if (allowedRoles.length === 0) return true;
+    if (!userRole && hasToken) return true;
+    return userRole ? allowedRoles.includes(userRole as TUserRole) : false;
+  }, [allowedRoles, userRole, hasToken]);
+
+  // ✅ Token bor, lekin state hali yuklanmagan → kutamiz
+  if (isLoading || (!isAuthenticated && hasToken)) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+      </div>
+    );
   }
 
-  //   if (!isAuthenticated) {
-  //     return <Navigate to="/" replace />;
-  //   }
-
-  if (!isAuthenticated) {
+  // ✅ Token ham yo'q, authenticated ham emas → login
+  if (!isAuthenticated && !hasToken) {
     return <Navigate to="/" replace />;
   }
 
-  //   let isRoleAllowed = false;
-
-  //   if (allowedRoles.length === 0) {
-  //     isRoleAllowed = true;
-  //   } else if (userRole) {
-  //     isRoleAllowed = allowedRoles.includes(userRole as TUserRole);
-  //   }
-  const isRoleAllowed = useMemo(() => {
-    if (allowedRoles.length === 0) return true;
-    return userRole ? allowedRoles.includes(userRole as TUserRole) : false;
-  }, [allowedRoles, userRole]);
-
+  // ✅ Role ruxsat berilmagan
   if (!isRoleAllowed) {
     return <Navigate to="/unauthorized" replace />;
   }

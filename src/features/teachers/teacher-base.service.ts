@@ -53,10 +53,11 @@ export const useCreateLesson = () => {
 	});
 };
 
-export const useProfile = () => {
+export const useProfile = (options?: { enabled?: boolean }) => {
 	return useQuery({
 		queryKey: ["me"],
 		queryFn: () => API.get("/teacher/me").then((res) => res.data),
+		enabled: options?.enabled ?? true,  // default true
 	});
 };
 

@@ -39,19 +39,37 @@ import { AuthCallback } from "./pages/INTRO/auth/authCallback";
 import { TProfile } from "./pages/teacher/profile/profile";
 import { TeacherLessonsPage } from "./pages/super-admin/lessons/lesson-detail";
 
-function AppRedirect() {
-  const role = localStorage.getItem("userRole");
+// ✅ Global loading spinner (ixtiyoriy, o'zingiznikiga almashtiring)
+function GlobalLoader() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      Yuklanmoqda...
+    </div>
+  );
+}
 
-  if (!role) return <Navigate to="/" replace />;
+function AppRedirect() {
+  const { userRole, isAuthenticated, isLoading } = useAuth();
+
+  // ✅ Loading tugamaguncha hech qayerga redirect qilma
+  if (isLoading) return <GlobalLoader />;
+
+  if (!isAuthenticated) return <Navigate to="/" replace />;
+
+  const role = userRole || localStorage.getItem("userRole");
 
   if (role === "SUPERADMIN")
     return <Navigate to="/app/SUPERADMIN/dashboard" replace />;
-
   if (role === "ADMIN") return <Navigate to="/app/ADMIN/dashboard" replace />;
-
-  if (role === "TEACHER") {
+  if (role === "TEACHER")
     return <Navigate to="/app/TEACHER/dashboard" replace />;
-  }
 
   return <Navigate to="/" replace />;
 }
@@ -59,10 +77,14 @@ function AppRedirect() {
 function App() {
   const { isAuthenticated, userRole, isLoading } = useAuth();
 
-  if (isLoading) return <div>Yuklanmoqda...</div>;
+  // ✅ ENG MUHIM: Butun app isLoading bo'lsa, hech qanday route render qilma
+  // Bu Google OAuth callback dan keyin token o'qilayotgan vaqtda
+  // ProtectedRoute "isAuthenticated: false" deb ko'rib login ga yuborishni oldini oladi
+  if (isLoading) return <GlobalLoader />;
 
   return (
     <Routes>
+      {/* 1. Landing sahifasi */}
       <Route
         path={INTRO_PATH.LANDING}
         element={
@@ -86,6 +108,7 @@ function App() {
         }
       />
 
+      {/* 3. Teacher va Student Login */}
       <Route
         path={INTRO_PATH.TEACHER_LOGIN}
         element={
@@ -107,9 +130,10 @@ function App() {
         }
       />
 
+      {/* ✅ AuthCallback - isLoading tekshiruvisiz, chunki u tokenni O'ZI saqlaydi */}
       <Route path="/auth/callback" element={<AuthCallback />} />
 
-      {/* 4. Himoyalangan Dashboard yo'llari (Admin & SuperAdmin uchun) */}
+      {/* 4. Himoyalangan yo'llar */}
       <Route
         element={
           <ProtectedRoute allowedRoles={["SUPERADMIN", "ADMIN", "TEACHER"]} />
@@ -117,7 +141,6 @@ function App() {
       >
         <Route path="/app" element={<AppRedirect />} />
 
-        {/* Umumiy Dashboard Layout */}
         <Route path="/app" element={<MainLayuot />}>
           {/* SUPERADMIN Yo'llari */}
           <Route element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} />}>
@@ -152,7 +175,7 @@ function App() {
             </Route>
           </Route>
 
-          {/* teacher yo'llari */}
+          {/* TEACHER Yo'llari */}
           <Route element={<ProtectedRoute allowedRoles={["TEACHER"]} />}>
             <Route path="TEACHER">
               <Route index element={<Navigate to="dashboard" replace />} />
@@ -165,6 +188,7 @@ function App() {
         </Route>
       </Route>
 
+      {/* 5. Noto'g'ri yo'llar */}
       <Route
         path="*"
         element={
