@@ -1,5 +1,3 @@
-
-
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, GraduationCap, Users, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -35,43 +33,70 @@ export const Landing = () => {
     },
   ];
 
+
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
-      <div className="max-w-5xl w-full text-center space-y-12">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">
-            O'quv platformasiga xush kelibsiz
+    <div className="min-h-screen bg-slate-50/50 flex flex-col items-center justify-center p-4 md:p-10">
+      <div className="max-w-6xl w-full text-center space-y-12">
+        {/* Sarlavha qismi */}
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-1000">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight">
+            O'quv platformasiga{" "}
+            <span className="text-blue-600">xush kelibsiz</span>
           </h1>
-          <p className="text-gray-500 text-lg">
+          <p className="text-slate-500 text-lg md:text-xl font-medium">
             Davom etish uchun o'z rolingizni tanlang
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* ShadcnUI Card Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {cards.map((item) => (
             <Card
               key={item.title}
-              className="group border-none shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden"
+              className="group relative border-none shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer bg-white rounded-[2.5rem] overflow-hidden hover:-translate-y-3"
               onClick={() => navigate(item.path)}
             >
-              <CardContent className="p-10 flex flex-col items-center space-y-6">
+              <CardContent className="p-8 md:p-12 flex flex-col items-center space-y-8">
+                {/* Ikonka konteyneri */}
                 <div
-                  className={`${item.bg} p-6 rounded-full group-hover:scale-110 transition-transform duration-300`}
+                  className={`relative ${item.bg} p-6 rounded-[2rem] transition-transform duration-500 group-hover:rotate-15 group-hover:scale-110 shadow-sm`}
                 >
                   <item.icon className={`w-12 h-12 ${item.color}`} />
+                  {/* Orqa fondagi ping effekti */}
+                  <span
+                    className={`absolute inset-0 rounded-[2rem] ${item.bg} animate-ping opacity-0 group-hover:opacity-25`}
+                  />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-gray-800">
+
+                {/* Matnlar */}
+                <div className="space-y-3 text-center">
+                  <h3 className="text-2xl font-bold text-slate-800 tracking-tight">
                     {item.title}
                   </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">
+                  <p className="text-slate-500 text-sm leading-relaxed px-2">
                     {item.desc}
                   </p>
                 </div>
-                <div
-                  className={`flex items-center gap-2 font-semibold ${item.color} opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity animate-pulse`}
-                >
-                  Kirish <ArrowRight className="w-4 h-4" />
+
+                {/* Kirish tugmasi - Dinamik va chiroyli */}
+                <div className="flex items-center gap-3 font-bold text-base transition-all duration-300">
+                  <span
+                    className={`relative px-6 py-2 rounded-full ${item.bg} ${item.color} group-hover:shadow-lg transition-all`}
+                  >
+                    Kirish
+                    {/* Siz aytgan o'sha aktiv nuqta */}
+                    <span className="absolute -right-1 -top-1 flex h-3 w-3">
+                      <span
+                        className={`animate-ping absolute inline-flex h-full w-full rounded-full ${item.bg} opacity-75`}
+                      ></span>
+                      <span
+                        className={`relative inline-flex rounded-full h-3 w-3 ${item.bg} border-2 border-white`}
+                      ></span>
+                    </span>
+                  </span>
+                  <ArrowRight
+                    className={`w-6 h-6 ${item.color} group-hover:translate-x-2 transition-transform duration-300`}
+                  />
                 </div>
               </CardContent>
             </Card>

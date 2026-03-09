@@ -78,119 +78,121 @@ export const Login = () => {
     });
   };
 
-  return (
-    <>
-      <div className="bg-background h-screen flex justify-center items-center">
-        <div className="w-125 space-y-7 shadow-lg bg-card py-8 px-8 rounded-2xl">
-          <div className="text-center">
-            <h1 className="text-[33px] font-bold text-primary mb-1">
-              Admin Panel
-            </h1>
-            <p className="font-stretch-105% text-[#555555] ">
-              Tizim boshqaruvi uchun kirish
-            </p>
-          </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-              {/* Username Field */}
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel
-                      className={`font-stretch-110% text-[#555555] inline-block transition-all ${
-                        watchUsername ? "animate-none" : "animate-bounce"
-                      }`}
-                    >
-                      Username
-                    </FormLabel>
+return (
+  <>
+    <div className="min-h-screen bg-slate-50 flex justify-center items-center p-4 md:p-6 selection:bg-primary/10">
+      <div className="w-full max-w-md space-y-8 shadow-2xl bg-white border border-slate-100 py-10 px-8 md:px-10 rounded-[2rem] animate-in fade-in zoom-in duration-500">
+        {/* Sarlavha qismi */}
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-tight">
+            Admin Panel
+          </h1>
+          <p className="font-medium text-slate-500 text-base">
+            Tizim boshqaruvi uchun kirish
+          </p>
+        </div>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Username Field */}
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem className="space-y-2.5">
+                  <FormLabel
+                    className={`text-[14px] font-bold text-slate-700 ml-1 inline-block transition-all ${
+                      watchUsername ? "animate-none" : "animate-bounce"
+                    }`}
+                  >
+                    Username
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-12.5 rounded-xl border-slate-200 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400 font-medium"
+                      placeholder="Foydalanuvchi nomini kiriting..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs font-semibold ml-1" />
+                </FormItem>
+              )}
+            />
+
+            {/* Password Field */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="space-y-2.5">
+                  <FormLabel
+                    className={`text-[14px] font-bold text-slate-700 ml-1 inline-block transition-all ${
+                      watchPassword ? "animate-none" : "animate-bounce"
+                    }`}
+                  >
+                    Parol
+                  </FormLabel>
+                  <div className="relative group">
                     <FormControl>
                       <Input
-                        className="h-12.5"
-                        placeholder="Foydalanuvchi nomini kiriting..."
+                        type={showPassword ? "text" : "password"}
+                        className="h-12.5 pr-12 rounded-xl border-slate-200 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400 font-medium"
+                        placeholder="Parolingizni kiriting..."
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Password Field */}
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel
-                      className={`font-stretch-110% text-[#555555] inline-block transition-all ${
-                        watchPassword ? "animate-none" : "animate-bounce"
-                      }`}
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary active:scale-90 transition-all focus:outline-none"
                     >
-                      Parol
-                    </FormLabel>
-                    <div className="relative">
-                      {" "}
-                      <FormControl>
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          className="h-12.5 pr-12"
-                          placeholder="Parolingizni kiriting..."
-                          {...field}
-                        />
-                      </FormControl>
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors focus:outline-none"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5" />
-                        ) : (
-                          <Eye className="h-5 w-5" />
-                        )}
-                      </button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="mb-7">
-                <Button
-                  type="submit"
-                  className="w-full active:bg-primary/80 flex justify-center items-center gap-2"
-                  size={"lg"}
-                  disabled={isPending}
-                >
-                  {isPending ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <>
-                      Tizimga kirish
-                      {/* Faqat forma valid bo'lganda ko'k nuqta chiqadi */}
-                      {isValid && (
-                        <span className="relative flex size-3">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-                          <span className="relative inline-flex size-3 rounded-full bg-sky-500"></span>
-                        </span>
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
                       )}
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
+                    </button>
+                  </div>
+                  <FormMessage className="text-xs font-semibold ml-1" />
+                </FormItem>
+              )}
+            />
 
-          <div className="text-center">
-            <p className="font-light text-[#555555] text-[13px]">
-              Admin panel - Faqat ruxsat etilgan foydalanuvchilar uchun
-            </p>
-          </div>
+            {/* Tugma qismi */}
+            <div className="pt-4">
+              <Button
+                type="submit"
+                className="w-full h-12.5 rounded-xl text-[16px] font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all flex justify-center items-center gap-3"
+                size={"lg"}
+                disabled={isPending}
+              >
+                {isPending ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    Tizimga kirish
+                    {isValid && (
+                      <span className="relative flex size-2.5">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/60 opacity-75"></span>
+                        <span className="relative inline-flex size-2.5 rounded-full bg-white"></span>
+                      </span>
+                    )}
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+
+        {/* Footer qismi */}
+        <div className="text-center pt-2">
+          <p className="font-semibold text-slate-400 text-[13px] leading-relaxed max-w-62.5 mx-auto">
+            Admin panel - Faqat ruxsat etilgan foydalanuvchilar uchun
+          </p>
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 };

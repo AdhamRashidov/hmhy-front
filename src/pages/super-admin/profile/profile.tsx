@@ -117,10 +117,10 @@ export const Profile = () => {
 
       <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white overflow-hidden rounded-2xl pt-0">
         {/* CARD HEADER - PREMIUM LOOK */}
-        <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 py-8">
+        <CardHeader className="bg-linear-to-r from-slate-50 to-white border-b border-slate-100 py-8">
           <div className="flex items-center gap-6">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-tr from-[#ff8f00] to-[#ffc107] rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+              <div className="absolute -inset-1 bg-linear-to-tr from-[#ff8f00] to-[#ffc107] rounded-full blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
               <div className="relative p-1 bg-white rounded-full border border-slate-100">
                 <div className="p-4 bg-slate-50 rounded-full">
                   <User

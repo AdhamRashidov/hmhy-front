@@ -140,254 +140,183 @@ export function TeacherLogin() {
     });
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4  relative overflow-hidden">
-      {/* Orqa fondagi bezak nuqtalar */}
-      <div className="absolute inset-0 z-0 opacity-40 [radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size:[24px_24px]"></div>
 
-      <div className="w-full max-w-md z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-[24px] mb-5 shadow-2xl shadow-blue-200 group transition-transform hover:rotate-6">
-            <Users2 className="w-10 h-10 text-white" />
-          </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Teacher Portal
-          </h1>
+return (
+  <div className="min-h-screen flex items-center justify-center p-4 md:p-6 bg-slate-50 relative overflow-hidden selection:bg-blue-100">
+    <div className="absolute inset-0 z-0 opacity-40 [radial-gradient(#cbd5e1_1px,transparent_1px)] [bg-size:24px_24px]"></div>
+
+    <div className="w-full max-w-110 z-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-[28px] mb-6 shadow-2xl shadow-blue-200 group transition-all duration-500 hover:rotate-12 hover:scale-110">
+          <Users2 className="w-10 h-10 text-white" />
         </div>
+        <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+          Teacher Portal
+        </h1>
+      </div>
 
-        <Card className="shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-0 rounded-[32px] bg-white/80 backdrop-blur-xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Xush kelibsiz</CardTitle>
-          </CardHeader>
+      <Card className="shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border-none rounded-[2.5rem] bg-white/90 backdrop-blur-2xl">
+        <CardHeader className="pt-10 pb-2 text-center">
+          <CardTitle className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
+            Xush kelibsiz
+          </CardTitle>
+        </CardHeader>
 
-          <CardContent className="space-y-6 px-8 pb-4">
-            {/* Google Tugmasi */}
-            <Button
-              type="button"
-              onClick={() => loginWithGoogle()}
-              disabled={isLoading}
-              className="w-full h-12 rounded-xl bg-blue-50/50 hover:bg-blue-50 border border-blue-100 text-blue-700 font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-3 group"
-            >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
-              ) : (
-                <>
-                  <GoogleIcon />
-                  <span>Google orqali tezkor kirish</span>
-                </>
-              )}
-            </Button>
+        <CardContent className="space-y-6 px-6 md:px-10 pb-10">
+          {/* Google Tugmasi */}
+          <Button
+            type="button"
+            onClick={() => loginWithGoogle()}
+            disabled={isLoading}
+            className="w-full h-13 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-100 text-slate-700 font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-3 group shadow-sm"
+          >
+            {isLoading ? (
+              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+            ) : (
+              <>
+                <GoogleIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="text-[15px]">Google orqali tezkor kirish</span>
+              </>
+            )}
+          </Button>
 
-            <div className="relative py-2">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-slate-500"></span>
-              </div>
-              <div className="relative flex justify-center text-[11px] uppercase tracking-widest font-bold text-slate-400">
-                <span className="bg-white px-4">yoki email bilan</span>
-              </div>
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-slate-200"></span>
             </div>
+            <div className="relative flex justify-center text-[10px] md:text-[11px] uppercase tracking-[0.2em] font-black text-slate-400">
+              <span className="bg-white px-4 rounded-full">
+                yoki email bilan
+              </span>
+            </div>
+          </div>
 
-            {/* <Form {...form}>
-              <form
-                onSubmit={formTeacher.handleSubmit(onSubmitTeacher)}
-                className="space-y-7"
-              >
-                <div className="space-y-2.5">
-                  <Label className="text-sm font-bold text-slate-700 ml-1">
-                    Elektron pochta
-                  </Label>
-                  <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
-                    <Input
-                      type="email"
-                      placeholder="name@university.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-12 h-13 rounded-2xl border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-2"
-                      disabled={isLoading}
-                      required
-                    />
-                  </div>
-                </div>
+          <Form {...formTeacher}>
+            <form
+              onSubmit={formTeacher.handleSubmit(onSubmitTeacher)}
+              className="space-y-6"
+            >
+              {/* EMAIL */}
+              <FormField
+                control={formTeacher.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-[14px] font-bold text-slate-700 ml-1">
+                      Elektron pochta
+                    </FormLabel>
 
-                <div className="space-y-2.5">
-                  <div className="flex justify-between items-center px-1">
-                    <Label className="text-sm font-bold text-slate-700">
-                      Maxfiy parol
-                    </Label>
-                    <button
-                      type="button"
-                      className="text-xs text-blue-600 font-bold hover:text-blue-700 transition-colors"
-                    >
-                      Unutdingizmi?
-                    </button>
-                  </div>
-                  <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-12 pr-12 h-13 rounded-2xl border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-2"
-                      disabled={isLoading}
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
-                    >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  </div>
-                </div>
+                    <FormControl>
+                      <div className="relative group">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
 
-                {error && (
-                  <Alert
-                    variant="destructive"
-                    className="rounded-2xl py-3 border-red-100 bg-red-50 text-red-600 animate-in zoom-in duration-300"
-                  >
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-xs font-bold tracking-tight">
-                      {error}
-                    </AlertDescription>
-                  </Alert>
+                        <Input
+                          type="email"
+                          placeholder="name@university.com"
+                          className="pl-12 h-13 rounded-2xl border-slate-200 bg-slate-50/30 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-2 font-medium"
+                          disabled={isLoading}
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+
+                    <FormMessage className="text-xs font-bold ml-1 text-red-500" />
+                  </FormItem>
                 )}
+              />
 
-                <Button
-                  type="submit"
-                  className="b w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-200 transition-all active:scale-[0.98] disabled:opacity-70 group"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Kirish <Users2 className="w-4 h-4" />
-                    </span>
-                  )}
-                </Button>
-              </form>
-            </Form> */}
-            <Form {...formTeacher}>
-              <form
-                onSubmit={formTeacher.handleSubmit(onSubmitTeacher)}
-                className="space-y-7"
-              >
-                {/* EMAIL */}
-                <FormField
-                  control={formTeacher.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2.5">
-                      <FormLabel className="text-sm font-bold text-slate-700 ml-1">
-                        Elektron pochta
+              {/* PASSWORD */}
+              <FormField
+                control={formTeacher.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <div className="flex justify-between items-center px-1">
+                      <FormLabel className="text-[14px] font-bold text-slate-700">
+                        Maxfiy parol
                       </FormLabel>
 
-                      <FormControl>
-                        <div className="relative group">
-                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
+                      <button
+                        type="button"
+                        className="text-[11px] md:text-xs text-blue-600 font-bold hover:text-blue-700 hover:underline transition-all"
+                      >
+                        Unutdingizmi?
+                      </button>
+                    </div>
 
-                          <Input
-                            type="email"
-                            placeholder="name@university.com"
-                            className="pl-12 h-13 rounded-2xl border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-2"
-                            disabled={isLoading}
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
+                    <FormControl>
+                      <div className="relative group">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* PASSWORD */}
-                <FormField
-                  control={formTeacher.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2.5">
-                      <div className="flex justify-between items-center px-1">
-                        <FormLabel className="text-sm font-bold text-slate-700">
-                          Maxfiy parol
-                        </FormLabel>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          className="pl-12 pr-12 h-13 rounded-2xl border-slate-200 bg-slate-50/30 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-2 font-medium"
+                          disabled={isLoading}
+                          {...field}
+                        />
 
                         <button
                           type="button"
-                          className="text-xs text-blue-600 font-bold hover:text-blue-700 transition-colors"
+                          onClick={() => setShowPassword((p) => !p)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 transition-all active:scale-90"
                         >
-                          Unutdingizmi?
+                          {showPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
                         </button>
                       </div>
+                    </FormControl>
 
-                      <FormControl>
-                        <div className="relative group">
-                          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
-
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="••••••••"
-                            className="pl-12 pr-12 h-13 rounded-2xl border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all border-2"
-                            disabled={isLoading}
-                            {...field}
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword((p) => !p)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
-                          >
-                            {showPassword ? (
-                              <EyeOff size={20} />
-                            ) : (
-                              <Eye size={20} />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* SERVER ERROR */}
-                {error && (
-                  <Alert
-                    variant="destructive"
-                    className="rounded-2xl py-3 border-red-100 bg-red-50 text-red-600 animate-in zoom-in duration-300"
-                  >
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-xs font-bold tracking-tight">
-                      {error}
-                    </AlertDescription>
-                  </Alert>
+                    <FormMessage className="text-xs font-bold ml-1 text-red-500" />
+                  </FormItem>
                 )}
+              />
 
-                {/* SUBMIT */}
+              {/* SERVER ERROR */}
+              {error && (
+                <Alert
+                  variant="destructive"
+                  className="rounded-2xl py-3 border-red-100 bg-red-50/50 text-red-600 animate-in fade-in zoom-in duration-300 flex items-center gap-3"
+                >
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <AlertDescription className="text-[12px] font-bold leading-tight">
+                    {error}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* SUBMIT */}
+              <div className="pt-2">
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-200 transition-all active:scale-[0.98] disabled:opacity-70 group"
+                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-2xl shadow-xl shadow-blue-200 transition-all active:scale-[0.98] disabled:opacity-70 group relative overflow-hidden"
                 >
                   {isLoading ? (
                     <Loader2 className="w-6 h-6 animate-spin" />
                   ) : (
-                    <span className="flex items-center gap-2">
-                      Kirish <Users2 className="w-4 h-4" />
+                    <span className="flex items-center justify-center gap-2">
+                      Kirish{" "}
+                      <Users2 className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   )}
                 </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      <p className="mt-8 text-center text-[12px] font-bold text-slate-400 px-6">
+        Faqat ro'yxatdan o'tgan o'qituvchilar uchun maxsus portal
+      </p>
     </div>
-  );
+  </div>
+);
+	
 }
 // function mutate(
 //   data: { email: string; password: string },
