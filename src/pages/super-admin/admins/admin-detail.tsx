@@ -31,7 +31,7 @@ export const AdminDetailsContent = ({ adminId }: { adminId: string }) => {
   }
 
   return (
-    <div className=" p-6 space-y-6 text-sm">
+    <div className="p-6 space-y-6 text-sm">
       <div className="space-y-4">
         <div className="flex justify-between border-b pb-2">
           <span className="text-chart-3 text-[15px] font-bold font-stretch-105%">

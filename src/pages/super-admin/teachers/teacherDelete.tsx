@@ -59,7 +59,7 @@ export const TeacherDeleteModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-112.5 p-0 overflow-hidden rounded-3xl border-none shadow-2xl">
+      <DialogContent className="w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] sm:max-w-md p-0 overflow-hidden rounded-3xl border-none shadow-2xl">
         {/* Yuqori qizil ogohlantirish qismi */}
         <div className="bg-red-50 p-6 flex flex-col items-center text-center gap-2">
           <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-2">
@@ -74,7 +74,7 @@ export const TeacherDeleteModal = ({
           </DialogDescription>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-6 space-y-5 overflow-y-auto max-h-[calc(100dvh-16rem)]">
           <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex items-start gap-3">
             <AlertTriangle
               className="text-amber-500 shrink-0 mt-0.5"
@@ -137,4 +137,6 @@ export const TeacherDeleteModal = ({
       </DialogContent>
     </Dialog>
   );
+	
+	
 };
